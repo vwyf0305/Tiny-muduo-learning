@@ -4,7 +4,10 @@
 #include "EventLoop.h"
 #include "Timestamp.h"
 #include "Channel.h"
-
+#include<fmt/core.h>
+#include<spdlog/spdlog.h>
+#include<string>
+ 
 Channel::Channel(EventLoop *loop, int fd): loop_(loop), fd_(fd), events_(0), revents_(0), index_(-1), tied_(false){
 
 }
@@ -24,6 +27,8 @@ void Channel::handleEvent(const Timestamp& receiveTime) {
 }
 
 void Channel::handleEventWithGuard(const Timestamp &receiveTime) {
+    // std::string info_re = fmt::format("Channel handle revents: {}", revents_);
+    spdlog::info("Channel handle revents: {}", revents_);
     if ((revents_ & EPOLLHUP) && !(revents_ & EPOLLIN)){
         if(closeEventCallback_)
             closeEventCallback_();

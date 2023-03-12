@@ -12,10 +12,12 @@ add_executable(tiny-muduo "")
 set_target_properties(tiny-muduo PROPERTIES OUTPUT_NAME "tiny-muduo")
 set_target_properties(tiny-muduo PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
 target_include_directories(tiny-muduo PRIVATE
-    /usr/local/include
+    /home/wuyifei0305/.xmake/packages/s/spdlog/v1.10.0/b3221babc12746958bdae5bff3ce4461/include
+    /home/wuyifei0305/.xmake/packages/f/fmt/9.1.0/c29cb875b2a64734b2484ba0c6228f3e/include
 )
 target_compile_definitions(tiny-muduo PRIVATE
-    SPDLOG_COMPILED_LIB
+    SPDLOG_FMT_EXTERNAL
+    FMT_HEADER_ONLY=1
 )
 target_compile_options(tiny-muduo PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-m64>
@@ -23,8 +25,6 @@ target_compile_options(tiny-muduo PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
     $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
 )
-set_target_properties(tiny-muduo PROPERTIES CXX_EXTENSIONS OFF)
-target_compile_features(tiny-muduo PRIVATE cxx_std_17)
 if(MSVC)
     target_compile_options(tiny-muduo PRIVATE $<$<CONFIG:Release>:-Ox -fp:fast>)
 else()
@@ -38,20 +38,15 @@ if(MSVC)
     set_property(TARGET tiny-muduo PROPERTY
         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
-target_link_libraries(tiny-muduo PRIVATE
-    fmt
-    spdlog
-)
-target_link_directories(tiny-muduo PRIVATE
-    /usr/local/lib64
-)
 target_link_options(tiny-muduo PRIVATE
     -m64
-    -pthread
 )
 target_sources(tiny-muduo PRIVATE
     src/main.cpp
     src/Logger.cpp
     src/InetAddress.cpp
+    src/Channel.cpp
+    src/EventLoop.cpp
+    src/TcpServer.cpp
 )
 

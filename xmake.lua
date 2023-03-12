@@ -1,11 +1,12 @@
 add_rules("mode.debug", "mode.release")
-add_requires("spdlog", {system=true})
-add_requires("fmt", {system = true})
-set_languages("c++17")
+add_requires("spdlog", {system = false, configs = {header_only = true, fmt_external = true}})
+add_requireconfs("spdlog.fmt", {system = false, override = true, version = "9.1.0", configs = {header_only = true}})
+
+
 target("tiny-muduo")
     set_kind("binary")
     add_files("src/*.cpp")
-    add_packages("fmt", "spdlog")
+    add_packages("fmt", "spdlog", {public = true})
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
