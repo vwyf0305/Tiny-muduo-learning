@@ -8,6 +8,7 @@
 #include "noncopyable.h"
 #include<functional>
 #include<memory>
+#include<sys/epoll.h>
 
 class EventLoop;
 class Timestamp;
@@ -21,8 +22,8 @@ public:
     inline void setReadCallback(ReadEventCallback&& cb){
         readEventCallback_ = std::move(cb);
     }
-    inline void setOpenCallback(EventCallback&& cb){
-        openEventCallback_ = std::move(cb);
+    inline void setWriteCallback(EventCallback&& cb){
+        writeEventCallback_ = std::move(cb);
     }
     inline void setCloseCallback(EventCallback&& cb){
         closeEventCallback_ = std::move(cb);
@@ -30,7 +31,7 @@ public:
     inline void setErrorCallback(EventCallback&& cb){
         errorEventCallback_ = std::move(cb);
     }
-    void tie(std::shared_ptr<void>&);
+    void tie(const std::shared_ptr<void>& obj);
     [[nodiscard]] inline int get_fd() const{
         return fd_;
     }
@@ -79,11 +80,11 @@ public:
         return loop_;
     }
     void remove();
-    ~Channel();
+    ~Channel() noexcept;
 private:
-    static const int kNoneEvent;
-    static const int kReadEvent;
-    static const int kWriteEvent;
+    static const int kNoneEvent{0};
+    static const int kReadEvent{EPOLLIN | EPOLLPRI};
+    static const int kWriteEvent{EPOLLOUT};
     EventLoop* loop_;
     const int fd_;
     int events_; // 注册fd感兴趣的事件
@@ -92,7 +93,7 @@ private:
     bool tied_;
     std::weak_ptr<void> tie_;
     ReadEventCallback readEventCallback_;
-    EventCallback openEventCallback_;
+    EventCallback writeEventCallback_;
     EventCallback closeEventCallback_;
     EventCallback errorEventCallback_;
     void handleEventWithGuard(const Timestamp& receiveTime);
