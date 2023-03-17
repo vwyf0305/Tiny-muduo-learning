@@ -70,10 +70,10 @@ public:
         events_ = kNoneEvent;
         update();
     }
-    [[nodiscard]] inline int getIndex() const{
+    [[nodiscard]] inline int get_index() const{
         return index_;
     }
-    inline void setIndex(int index){
+    inline void set_index(int index){
         index_ = index;
     }
     [[nodiscard]] inline EventLoop* ownerloop() const{

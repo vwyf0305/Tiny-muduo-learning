@@ -22,7 +22,7 @@ public:
     virtual void removeChannel(Channel* channel) = 0;
     bool hasChannel(Channel* channel) const;
     [[nodiscard]] static Poller* getDefaultPoller(EventLoop* loop);
-    virtual ~Poller();
+    virtual ~Poller() = default;
 protected:
     ChannelMap channelMap_;
 private:
