@@ -26,6 +26,6 @@ private:
     int epoll_fd;
     EventList events_;
     void fillActiveChannels(int numEvents, ChannelList *activeChannels) const;
-    void update(int operation, Channel* channel);
+    void update(int operation, Channel* channel) const;
 };
 

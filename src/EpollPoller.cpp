@@ -5,7 +5,7 @@
 #include "Channel.h"
 #include "EpollPoller.h"
 #include "Timestamp.h"
-#include<errno.h>
+#include<cerrno>
 #include<unistd.h>
 #include<cstring>
 #include<sys/epoll.h>
@@ -77,7 +77,7 @@ void EpollPoller::removeChannel(Channel *channel) {
     channel->set_index(kNew);
 }
 
-void EpollPoller::update(int operation, Channel *channel) {
+void EpollPoller::update(int operation, Channel *channel) const{
     epoll_event epollEvent;
     memset(&epollEvent, 0, sizeof(epollEvent));
     int fd = channel->get_fd();
