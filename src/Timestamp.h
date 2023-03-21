@@ -9,6 +9,7 @@
 #include<string>
 #include<fmt/core.h>
 #include<memory>
+
 class Timestamp{
 public:
     explicit Timestamp() : MicroSecondsSinceEpoch_(0){

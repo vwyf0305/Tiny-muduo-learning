@@ -3,10 +3,11 @@
 //
 
 #include "Poller.h"
+#include "EpollPoller.h"
 
 Poller* Poller::getDefaultPoller(EventLoop *loop) {
     if(::getenv("MUDUO_USE_POLL"))
         return nullptr;
     else
-        return nullptr;
+        return new EpollPoller(loop);
 }

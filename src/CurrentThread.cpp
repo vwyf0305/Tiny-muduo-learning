@@ -6,7 +6,7 @@
 
 namespace CurrentThread
 {
-    __thread int t_cachedTid = 0;
+    __thread pid_t t_cachedTid{0};
 
     void cacheTid()
     {
