@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include<random>
 #include<thread>
 #include<mutex>
 #include<atomic>
@@ -26,7 +27,7 @@ public:
     explicit EventLoop();
     void loop();
     void quit();
-    [[nodicard]] inline Timestamp pollReturnTime() const {
+    inline Timestamp pollReturnTime() const {
         return poll_return_time;
     }
     void runInLoop(Functor cb); // 在当前loop中执行cb
@@ -38,9 +39,12 @@ public:
     [[nodicard]] inline bool isInLoopThread() const{
        return thread_id == CurrentThread::get_tid();
     }
-    ~EventLoop();
+    ~EventLoop() noexcept;
 private:
-    const int loop_id;
+    std::random_device rd;
+    std::default_random_engine eng{rd()};
+    std::uniform_int_distribution<unsigned int> random_engine{1, 10000};
+    const unsigned int loop_id;
     std::atomic<bool> looping_;
     std::atomic<bool> quit_;
     std::atomic<bool> callingPendingFunctors_;
@@ -53,7 +57,7 @@ private:
     Channel* current_active_channel;
     std::mutex mutex_;
     int wake_up_fd; // 主要作用，当mainLoop获取一个新用户的channel，通过轮询算法选择一个subloop，通过该成员唤醒subloop处理channel
-    void handle_read();
+    void handle_read() const;
     void do_pending_functors();
 };
 
