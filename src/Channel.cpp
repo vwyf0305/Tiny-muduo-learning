@@ -12,9 +12,7 @@ Channel::Channel(EventLoop *loop, int fd): loop_(loop), fd_(fd), events_(0), rev
 
 }
 
-Channel::~Channel() noexcept {
 
-}
 
 void Channel::handleEvent(const Timestamp& receiveTime) {
     if(tied_){
@@ -56,11 +54,11 @@ void Channel::tie(const std::shared_ptr<void> & obj) {
 // 当改变channel所表示的文件描述符fd的event事件改变后， 该函数负责更改poller里对应的事件epoll_ctl
 // Eventloop => ChannelList, Poller
 void Channel::update() {
-
+    loop_->updateChannel(this);
 }
 
 // 通知Eventloop删除当前Channel
 void Channel::remove() {
-
+    loop_->removeChannel(this);
 }
 

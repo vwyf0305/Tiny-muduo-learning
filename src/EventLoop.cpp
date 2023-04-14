@@ -48,13 +48,21 @@ void EventLoop::handle_read() const {
     }
 }
 
+void EventLoop::wakeup() {
+    uint64_t one{1};
+    ssize_t n = ::write(wake_up_fd, &one, sizeof(one));
+    if(n!=sizeof(one)){
+        spdlog::error("Eventloop write {0} bytes instead of {1}.", n, sizeof(one));
+    }
+}
+
 void EventLoop::do_pending_functors() // 执行回调
 {
     std::vector<Functor> functors;
     callingPendingFunctors_ = true;
 
     {
-        std::unique_lock<std::mutex> lock(mutex_);
+        std::scoped_lock lock(mutex_);
         functors.swap(pendingFunctors_);
     }
 
@@ -86,6 +94,20 @@ void EventLoop::quit() {
     if(!isInLoopThread()){
         wakeup();
     }
+}
+
+void EventLoop::runInLoop(EventLoop::Functor cb) {
+    if(isInLoopThread())
+        cb();
+    else
+        queueInLoop(cb);
+}
+
+void EventLoop::queueInLoop(EventLoop::Functor cb) {
+    std::scoped_lock lock(mutex_);
+    pendingFunctors_.emplace_back(cb);
+    if(!isInLoopThread() || callingPendingFunctors_)
+        wakeup();
 }
 
 EventLoop::~EventLoop() noexcept {

@@ -27,19 +27,26 @@ public:
     explicit EventLoop();
     void loop();
     void quit();
-    inline Timestamp pollReturnTime() const {
+    [[nodiscard]] inline Timestamp pollReturnTime() const {
         return poll_return_time;
     }
     void runInLoop(Functor cb); // 在当前loop中执行cb
     void queueInLoop(Functor cb); // 把cb放入队列中，唤醒loop所在的线程，执行cb
-    void wakeup();
-    void updateChannel(Channel *channel);
-    void removeChannel(Channel *channel);
-    bool hasChannel(Channel *channel);
-    [[nodicard]] inline bool isInLoopThread() const{
+    void wakeup() ;
+    inline void updateChannel(Channel *channel){
+        poller_->updateChannel(channel);
+    }
+    inline void removeChannel(Channel *channel){
+        poller_->removeChannel(channel);
+    }
+
+    inline bool hasChannel(Channel *channel){
+        return poller_->hasChannel(channel);
+    }
+    [[nodiscard]] inline bool isInLoopThread() const{
        return thread_id == CurrentThread::get_tid();
     }
-    ~EventLoop() noexcept;
+    ~EventLoop() noexcept override;
 private:
     std::random_device rd;
     std::default_random_engine eng{rd()};

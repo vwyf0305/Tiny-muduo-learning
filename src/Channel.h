@@ -80,7 +80,7 @@ public:
         return loop_;
     }
     void remove();
-    ~Channel() noexcept;
+    ~Channel() noexcept override = default;
 private:
     static const int kNoneEvent{0};
     static const int kReadEvent{EPOLLIN | EPOLLPRI};
