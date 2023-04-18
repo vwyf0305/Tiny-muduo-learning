@@ -13,11 +13,12 @@
 #include<memory>
 #include<functional>
 #include "Timestamp.h"
+#include "Poller.h"
 #include"CurrentThread.h"
 #include "noncopyable.h"
 
 class Channel;
-class Poller;
+
 
 class EventLoop:noncopyable {
 public:
