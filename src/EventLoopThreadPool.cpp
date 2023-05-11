@@ -15,7 +15,7 @@ void EventLoopThreadPool::start(const EventLoopThreadPool::ThreadInitCallback &c
     started_ = true;
     for(int i=0;i!=num_threads;i++){
         std::string this_thread_name = fmt::format("{}_{}", name_, i);
-        std::unique_ptr<EventLoopThread> t = std::make_unique<EventLoopThread>(cb, this_thread_name);
+        EventLoopThread *t = new EventLoopThread(cb, this_thread_name);
         threads_.emplace_back(t);
         loops_.emplace_back(t->startLoop());
     }

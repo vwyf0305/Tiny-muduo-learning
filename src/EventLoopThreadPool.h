@@ -30,7 +30,7 @@ public:
     }
     std::vector<EventLoop*> get_all_loops() const;
     EventLoop* get_next_loop();
-    ~EventLoopThreadPool() = default;
+    ~EventLoopThreadPool() {}
 private:
     EventLoop* base_loop;
     std::string name_;

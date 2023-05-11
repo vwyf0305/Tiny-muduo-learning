@@ -13,6 +13,14 @@ public:
     inline int get_fd() const{
         return socket_fd;
     }
+    void bind_address(const InetAddress& address);
+    void socket_listen();
+    int socket_accept(InetAddress* peeraddr);
+    void shutdown_write();
+    void setTcpNoDelay(bool on);
+    void setReuseAddr(bool on);
+    void setReusePort(bool on);
+    void setKeepAlive(bool on);
     ~Socket();
 
 private:
