@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <cerrno>
 #include <spdlog/spdlog.h>
-#include <sys/socket.h>
+#include <sys/types.h>
 #include <cstring>
 #include <netinet/tcp.h>
 #include <sys/socket.h>
