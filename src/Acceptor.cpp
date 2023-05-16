@@ -4,7 +4,7 @@
 
 #include "Acceptor.h"
 #include <spdlog/spdlog.h>
-#include <sys/socket.h
+#include <sys/socket.h>
 #include <cstring>
 #include <unistd.h>
 #include <cerrno>
