@@ -37,7 +37,7 @@ private:
     bool started_;
     int num_threads;
     int next_;
-    std::vector<std::unique_ptr<EventLoopThread>> threads_;
+    std::vector<std::shared_ptr<EventLoopThread>> threads_;
     std::vector<EventLoop*> loops_;
 
 };
