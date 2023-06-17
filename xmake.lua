@@ -1,7 +1,7 @@
 add_rules("mode.debug", "mode.release")
 add_requires("spdlog", {system = false, configs = {header_only = true, fmt_external = true}})
 add_requireconfs("spdlog.fmt", {system = false, override = true, version = "9.1.0", configs = {header_only = true}})
-
+set_languages("c++20")
 
 target("tiny-muduo")
     set_kind("binary")

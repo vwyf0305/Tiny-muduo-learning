@@ -35,3 +35,7 @@ void TcpServer::start() {
     }
 
 }
+
+TcpServer::~TcpServer() noexcept {
+
+}

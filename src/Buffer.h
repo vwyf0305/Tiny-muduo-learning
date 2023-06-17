@@ -45,7 +45,7 @@ public:
         return buffer_begin() + writer_index;
     }
     ssize_t read_fd(int fd, int* save_errno);
-
+    ssize_t write_fd(int fd, int* save_errno);
 private:
     std::vector<char> buffer_;
     std::size_t reader_index;

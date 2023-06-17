@@ -59,3 +59,11 @@ ssize_t Buffer::read_fd(int fd, int *save_errno) {
     return n;
 }
 
+
+ssize_t Buffer::write_fd(int fd, int *save_errno) {
+    ssize_t n = ::write(fd, &*peek(), readable_bytes());
+    if(n<0)
+        *save_errno = errno;
+    return n;
+}
+

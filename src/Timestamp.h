@@ -21,7 +21,7 @@ public:
     inline static Timestamp nowa(){
         return Timestamp(time(nullptr));
     }
-    [[nodiscard]] inline std::string toString() const{
+    [[nodiscard]] inline std::string toString() {
         tm *tm_time = localtime(&MicroSecondsSinceEpoch_);
         std::string res = fmt::format("{0}/{1}/{2}, {3}:{4}:{5}",
                                       tm_time->tm_year+1900,
