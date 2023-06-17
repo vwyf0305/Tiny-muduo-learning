@@ -71,7 +71,7 @@ private:
     Buffer output_buffer; // 发送数据的缓冲区
     std::string name_;
     std::atomic<StateE> state_;
-    const std::unordered_map<StateE, std::string> state_map{{StateE::kConnected, "Connected"}, {StateE::kDisconnecting, "Disconnecting"}, {StateE::kConnecting, "Connecting"}, {StateE::kDisconnected, "Disconnected"}};
+    std::unordered_map<StateE, std::string> state_map{{StateE::kConnected, "Connected"}, {StateE::kDisconnecting, "Disconnecting"}, {StateE::kConnecting, "Connecting"}, {StateE::kDisconnected, "Disconnected"}};
     ConnectionCallback connectionCallback_; // 有新连接时的回调
     MessageCallback messageCallback_; // 有读写消息时的回调
     WriteCompleteCallback writeCompleteCallback_; // 消息发送完成以后的回调
