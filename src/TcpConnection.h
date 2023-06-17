@@ -22,9 +22,9 @@
 class TcpConnection :noncopyable, public std::enable_shared_from_this<TcpConnection>{
 public:
     enum class StateE{
-        kDisconnectd,
+        kDisconnected,
         kConnecting,
-        kConnectd,
+        kConnected,
         kDisconnecting,
     };
     TcpConnection(EventLoop *loop,
@@ -35,10 +35,10 @@ public:
     ~TcpConnection();
 
     EventLoop* get_loop() const { return loop_; }
-    const std::string& get_name() const { return name_; }
+    const std::string get_name() const { return name_; }
     const InetAddress& local_address() const { return local_addr; }
     const InetAddress& peer_address() const { return peer_addr; }
-    bool is_connectd() { return state_ == StateE::kConnectd;}
+    bool is_connectd() { return state_ == StateE::kConnected;}
     // 发送数据
     void send(const std::string &buf);
     // 关闭连接
@@ -53,7 +53,7 @@ public:
     { writeCompleteCallback_ = cb; }
 
     inline void setHighWaterMarkCallback(const HighWaterMarkCallback& cb, std::size_t highWaterMark)
-    { highWaterMarkCallback_ = cb; highWaterMark_ = highWaterMark; }
+    { highWaterMarkCallback_ = cb; high_water_mark = highWaterMark; }
 
     inline void setCloseCallback(const CloseCallback& cb)
     { closeCallback_ = cb; }
@@ -69,9 +69,9 @@ private:
     EventLoop* loop_; // monitor subloop
     Buffer input_buffer;  // 接收数据的缓冲区
     Buffer output_buffer; // 发送数据的缓冲区
-    std::string_view name_;
+    std::string name_;
     std::atomic<StateE> state_;
-    const std::unordered_map<StateE, std::string> state_map{{StateE::kConnectd, "Connected"}, {StateE::kDisconnecting, "Disconnecting"}, {StateE::kConnecting, "Connecting"}, {StateE::kDisconnectd, "Disconnected"}};
+    const std::unordered_map<StateE, std::string> state_map{{StateE::kConnected, "Connected"}, {StateE::kDisconnecting, "Disconnecting"}, {StateE::kConnecting, "Connecting"}, {StateE::kDisconnected, "Disconnected"}};
     ConnectionCallback connectionCallback_; // 有新连接时的回调
     MessageCallback messageCallback_; // 有读写消息时的回调
     WriteCompleteCallback writeCompleteCallback_; // 消息发送完成以后的回调

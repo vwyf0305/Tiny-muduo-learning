@@ -44,13 +44,14 @@ public:
 private:
     int next_connection_id;
     EventLoop *loop_;
+    ConnectionMap connections_;
     ConnectionCallback connectionCallback_; // callback when new connection comes
     MessageCallback messageCallback_; // callback when new message comes
     WriteCompleteCallback writeCompleteCallback_; // callback when message sends completely
     ThreadInitCallback threadInitCallback_; // thead init callback
     std::atomic<int> started_;
-    const std::string ip_port;
-    const std::string name_;
+    std::string_view ip_port;
+    std::string  name_;
     std::unique_ptr<Acceptor> acceptor_; // runs in mainloop and monitors new connections
     std::shared_ptr<EventLoopThreadPool> thread_pool;
     void new_connection(int socket_fd, const InetAddress& peer_addr);

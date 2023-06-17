@@ -25,7 +25,7 @@ static EventLoop* CheckLoopNotNull(EventLoop* loop){
 
 TcpConnection::TcpConnection(EventLoop *loop, const std::string &name, int socket_fd, const InetAddress &local_addr,
                              const InetAddress &peer_addr) :loop_(CheckLoopNotNull(loop)), name_(name), state_(StateE::kConnecting), reading_(true),
-                             local_addr(local_addr), peer_addr(peer_addr), highWaterMark_(64*1024*1024),
+                             local_addr(local_addr), peer_addr(peer_addr), high_water_mark(64*1024*1024),
                              socket_(new Socket(socket_fd)), channel_(new Channel(loop, socket_fd)){
     channel_->setReadCallback(std::bind(&TcpConnection::handle_read, this, std::placeholders::_1));
     channel_->setWriteCallback(std::bind(&TcpConnection::handle_write, this));
@@ -73,7 +73,7 @@ void TcpConnection::handle_write() {
 
 void TcpConnection::handle_close() {
     spdlog::info("TcpConnection::handleClose fd={}, state={}\n", channel_->get_fd(), state_map[state_]);
-    set_state(StateE::kDisconnectd);
+    set_state(StateE::kDisconnected);
     channel_->disableAll();
     TcpConnectionPtr connection_ptr{shared_from_this()};
     if(connectionCallback_)
@@ -86,7 +86,7 @@ void TcpConnection::handle_error() {
     int optval;
     socklen_t optlen = sizeof(optval);
     int err = 0;
-    if (::getsockopt(channel_->fd(), SOL_SOCKET, SO_ERROR, &optval, &optlen) < 0)
+    if (::getsockopt(channel_->get_fd(), SOL_SOCKET, SO_ERROR, &optval, &optlen) < 0)
         err = errno;
     else
         err = optval;
@@ -114,7 +114,7 @@ void TcpConnection::send_in_loop(const void *message, std::size_t len) {
             if (errno != EWOULDBLOCK){
                 spdlog::error("TcpConnection::sendInLoop");
                 if (errno == EPIPE || errno == ECONNRESET)
-                    faultError = true;
+                    fault_error = true;
 
             }
         }
@@ -132,7 +132,7 @@ void TcpConnection::send_in_loop(const void *message, std::size_t len) {
 }
 
 void TcpConnection::send(const std::string &buf) {
-    if(state_ == StateE::kConnectd){
+    if(state_ == StateE::kConnected){
         if(loop_->isInLoopThread())
             send_in_loop(buf.c_str(), buf.size());
         else
@@ -146,22 +146,22 @@ void TcpConnection::shutdown_in_loop() {
 }
 
 void TcpConnection::shutdown() {
-    if(state_ == StateE::kConnectd){
+    if(state_ == StateE::kConnected){
         set_state(StateE::kDisconnecting);
         loop_->runInLoop(std::bind(&TcpConnection::shutdown_in_loop, this));
     }
 }
 
 void TcpConnection::connect_established() {
-    set_state(StateE::kConnectd);
+    set_state(StateE::kConnected);
     channel_->tie(shared_from_this());
     channel_->enableReading();
     connectionCallback_(shared_from_this());
 }
 
 void TcpConnection::connect_destroyed() {
-    if(state_ == StateE::kConnectd){
-        set_state(StateE::kDisconnectd);
+    if(state_ == StateE::kConnected){
+        set_state(StateE::kDisconnected);
         channel_->disableAll();
         connectionCallback_(shared_from_this());
     }
