@@ -50,7 +50,7 @@ void EpollPoller::updateChannel(Channel *channel) {
     if(index == kNew || index==kDeleted){
         if(index == kNew){
             int fd = channel->get_fd();
-            channelMap_.insert({fd, channel});
+            channelMap_[fd] = channel;
         }
         channel->set_index(kAdded);
         update(EPOLL_CTL_ADD, channel);
@@ -89,8 +89,10 @@ void EpollPoller::update(int operation, Channel *channel) const{
     if(epoll_res<0){
         if(operation==EPOLL_CTL_DEL)
             spdlog::error("epoll_ctl delete error: {}", ::strerror(errno));
-        else
+        else {
             spdlog::critical("epoll_ctl add/modify error: {}", ::strerror(errno));
+            exit(1);
+        }
     }
 
 }

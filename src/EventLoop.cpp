@@ -26,9 +26,11 @@ int EventLoop::createEventfd() {
     return fd;
 }
 
-EventLoop::EventLoop() : thread_id(CurrentThread::get_tid()),looping_(false), quit_(false), callingPendingFunctors_(false),
-wake_up_fd(EventLoop::createEventfd()), wake_up_channel(new Channel(this, wake_up_fd)), loop_id(random_engine(eng)),
-poller_(Poller::getDefaultPoller(this)), current_active_channel(nullptr){
+EventLoop::EventLoop() : thread_id(CurrentThread::get_tid()),looping_(false), quit_(false), callingPendingFunctors_(false), poller_(Poller::getDefaultPoller(this)),
+                         wake_up_fd(EventLoop::createEventfd()), loop_id(random_engine(eng)),
+current_active_channel(nullptr){
+    
+    wake_up_channel = std::make_unique<Channel>(this, wake_up_fd);
     spdlog::debug("Event Loop created {0} in thead {1}.", loop_id, thread_id);
     if(t_loopInThisThread){
         spdlog::critical("Another Evevntloop {0} in this thread {1}.", t_loopInThisThread->loop_id, thread_id);

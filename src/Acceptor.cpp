@@ -18,6 +18,8 @@ static int create_nonblocking()
         spdlog::critical("%s:%s:%d listen socket create err:%s \n", __FILE__, __FUNCTION__, __LINE__, strerror(errno));
         exit(1);
     }
+    else
+        spdlog::info("Socket success.");
     return socket_fd;
 }
 
