@@ -42,7 +42,7 @@ void RPCServer::onMessageCallback(const TcpConnectionPtr &conn, Buffer *buf, Tim
         if(id_set.find(msg_id)==id_set.end()){
             conn->send(reply_msg);
             conn->shutdown();
-            id_set.insert(msg);
+            id_set.insert(msg_id);
         }
 
     }
