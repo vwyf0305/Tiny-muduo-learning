@@ -40,7 +40,7 @@ void RPCServer::onMessageCallback(const TcpConnectionPtr &conn, Buffer *buf, Tim
         std::string reply_msg{parse_msg->get_reply_msg()};
         std::string msg_id{parse_msg->get_id()};
         if(id_set.find(msg_id)==id_set.end()){
-            conn->send(msg);
+            conn->send(reply_msg);
             conn->shutdown();
             id_set.insert(msg);
         }
