@@ -20,7 +20,7 @@ concept IsNumber = std::is_arithmetic<T>::value;
 template<IsNumber T>
 class ParseMsg {
 public:
-    explicit ParseMsg(std::function<T(T ,T)>sum, std::function<std::string(std::string)> uppercase);
+    explicit ParseMsg(const std::function<T(T ,T)>& sum, const std::function<std::string(std::string)>& uppercase);
     bool get_request_msg(const std::string& msg);
     std::string get_reply_msg();
     T str_to_type(const std::string& num);
@@ -41,8 +41,8 @@ private:
 };
 
 template<IsNumber T>
-ParseMsg<T>::ParseMsg(std::function<T(T, T)> sum, std::function<std::string(std::string)> uppercase) :id_(0),sum_(sum), uppercase_(uppercase), left_brace_count_(0),
-                                                                                                      right_brace_count_(0), parse_idx(0), reply_msg(""), request_msg(""){
+ParseMsg<T>::ParseMsg(const std::function<T(T, T)>& sum, const std::function<std::string(std::string)>& uppercase) :id_(0),sum_(sum), uppercase_(uppercase), left_brace_count_(0),
+                                                                                                      right_brace_count_(0), parse_idx(0), request_msg(""){
 
 }
 
