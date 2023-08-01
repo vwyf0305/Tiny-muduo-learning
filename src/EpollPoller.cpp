@@ -78,7 +78,7 @@ void EpollPoller::removeChannel(Channel *channel) {
 }
 
 void EpollPoller::update(int operation, Channel *channel) const{
-    epoll_event epollEvent;
+    epoll_event epollEvent{};
     memset(&epollEvent, 0, sizeof(epollEvent));
     int fd = channel->get_fd();
     epollEvent.events = channel->get_events();

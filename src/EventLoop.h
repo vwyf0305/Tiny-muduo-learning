@@ -31,8 +31,8 @@ public:
     [[nodiscard]] inline Timestamp pollReturnTime() const {
         return poll_return_time;
     }
-    void runInLoop(Functor cb); // 在当前loop中执行cb
-    void queueInLoop(Functor cb); // 把cb放入队列中，唤醒loop所在的线程，执行cb
+    void runInLoop(const Functor& cb); // 在当前loop中执行cb
+    void queueInLoop(const Functor& cb); // 把cb放入队列中，唤醒loop所在的线程，执行cb
     void wakeup() ;
     inline void updateChannel(Channel *channel){
         poller_->updateChannel(channel);

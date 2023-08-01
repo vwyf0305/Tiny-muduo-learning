@@ -15,7 +15,7 @@ public:
     static constexpr std::size_t kCheapPrepend{8};
     static constexpr std::size_t kInitialSize{1024};
     explicit Buffer(std::size_t initialSize=kInitialSize): reader_index(kCheapPrepend), writer_index(kCheapPrepend), buffer_(kCheapPrepend+initialSize){}
-    inline std::size_t readable_bytes() const{
+    [[nodiscard]] inline std::size_t readable_bytes() const{
         return writer_index - reader_index;
     }
     inline std::size_t writable_bytes() const{

@@ -1,14 +1,14 @@
 //
 // Created by wuyifei0305 on 23-3-12.
 //
-#include<functional>
-#include<mutex>
-#include<cstring>
-#include<cerrno>
-#include<cstdlib>
-#include<unistd.h>
-#include<sys/eventfd.h>
-#include<spdlog/spdlog.h>
+#include <functional>
+#include <mutex>
+#include <cstring>
+#include <cerrno>
+#include <cstdlib>
+#include <unistd.h>
+#include <sys/eventfd.h>
+#include <spdlog/spdlog.h>
 #include "Poller.h"
 #include "Channel.h"
 #include "Timestamp.h"
@@ -29,7 +29,7 @@ int EventLoop::createEventfd() {
 EventLoop::EventLoop() : thread_id(CurrentThread::get_tid()),looping_(false), quit_(false), callingPendingFunctors_(false), poller_(Poller::getDefaultPoller(this)),
                          wake_up_fd(EventLoop::createEventfd()), loop_id(random_engine(eng)),
 current_active_channel(nullptr){
-    
+
     wake_up_channel = std::make_unique<Channel>(this, wake_up_fd);
     spdlog::debug("Event Loop created {0} in thead {1}.", loop_id, thread_id);
     if(t_loopInThisThread){
@@ -98,14 +98,14 @@ void EventLoop::quit() {
     }
 }
 
-void EventLoop::runInLoop(EventLoop::Functor cb) {
+void EventLoop::runInLoop(const EventLoop::Functor& cb) {
     if(isInLoopThread())
         cb();
     else
         queueInLoop(cb);
 }
 
-void EventLoop::queueInLoop(EventLoop::Functor cb) {
+void EventLoop::queueInLoop(const EventLoop::Functor& cb) {
     std::scoped_lock lock(mutex_);
     pendingFunctors_.emplace_back(cb);
     if(!isInLoopThread() || callingPendingFunctors_)

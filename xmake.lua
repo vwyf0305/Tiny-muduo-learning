@@ -1,4 +1,6 @@
 add_rules("mode.debug", "mode.release")
+add_requires("pystring")
+add_requires("jsoncpp", {system = true})
 add_requires("spdlog", {system = false, configs = {header_only = true, fmt_external = true}})
 add_requireconfs("spdlog.fmt", {system = false, override = true, version = "9.1.0", configs = {header_only = true}})
 set_languages("c++20")
@@ -7,6 +9,7 @@ target("tiny-muduo")
     set_kind("binary")
     add_files("src/*.cpp")
     add_packages("fmt", "spdlog", {public = true})
+    add_packages("jsoncpp", "pystring")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io

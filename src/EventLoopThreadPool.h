@@ -14,6 +14,8 @@
 class EventLoop;
 class EventLoopThread;
 
+
+
 class EventLoopThreadPool:noncopyable {
 public:
     using ThreadInitCallback = std::function<void(EventLoop*)>;
@@ -30,7 +32,7 @@ public:
     }
     std::vector<EventLoop*> get_all_loops() const;
     EventLoop* get_next_loop();
-    ~EventLoopThreadPool() {}
+    ~EventLoopThreadPool() override {}
 private:
     EventLoop* base_loop;
     std::string name_;
