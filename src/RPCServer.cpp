@@ -48,3 +48,7 @@ void RPCServer::onMessageCallback(const TcpConnectionPtr &conn, Buffer *buf, Tim
     }
 }
 
+RPCServer::~RPCServer() noexcept{
+    delete rpc_context;
+}
+

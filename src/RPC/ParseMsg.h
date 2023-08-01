@@ -20,11 +20,11 @@ concept IsNumber = std::is_arithmetic<T>::value;
 template<IsNumber T>
 class ParseMsg {
 public:
-    explicit ParseMsg(const std::function<T(T ,T)>& sum, const std::function<std::string(std::string)>& uppercase);
+    explicit ParseMsg(const std::function<T(T ,T)>& sum, const std::function<std::string(const std::string&)>& uppercase);
     bool get_request_msg(const std::string& msg);
     std::string get_reply_msg();
     T str_to_type(const std::string& num);
-    inline std::string get_id() const{
+    [[nodiscard]] inline std::string get_id() const{
         return id_;
     }
 private:
@@ -37,11 +37,11 @@ private:
     unsigned int right_brace_count_;
     unsigned int parse_idx;
     std::function<T(T ,T)> sum_;
-    std::function<std::string(std::string)> uppercase_;
+    std::function<std::string(std::string&)> uppercase_;
 };
 
 template<IsNumber T>
-ParseMsg<T>::ParseMsg(const std::function<T(T, T)>& sum, const std::function<std::string(std::string)>& uppercase) :id_(0),sum_(sum), uppercase_(uppercase), left_brace_count_(0),
+ParseMsg<T>::ParseMsg(const std::function<T(T, T)>& sum, const std::function<std::string(const std::string&)>& uppercase) :id_(0),sum_(sum), uppercase_(uppercase), left_brace_count_(0),
                                                                                                       right_brace_count_(0), parse_idx(0), request_msg(""){
 
 }
